@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Mentoria Hub</title>
+<style>
+:root {
+  --bg: #0f0f1a;
+  --bg2: #161626;
+  --bg3: #1e1e32;
+  --card: #1a1a2e;
+  --card2: #22223a;
+  --border: #2e2e4a;
+  --accent: #7c5cfc;
+  --accent2: #a78bfa;
+  --accent3: #38bdf8;
+  --green: #34d399;
+  --yellow: #fbbf24;
+  --red: #f87171;
+  --text: #e2e8f0;
+  --text2: #94a3b8;
+  --text3: #64748b;
+  --radius: 12px;
+  --radius2: 8px;
+  --shadow: 0 4px 24px rgba(124,92,252,0.10);
+}
+.light {
+  --bg: #f4f6fb;
+  --bg2: #eaf0fb;
+  --bg3: #e2eaf8;
+  --card: #ffffff;
+  --card2: #f0f4ff;
+  --border: #d1d9ef;
+  --text: #1a1a2e;
+  --text2: #4a5568;
+  --text3: #94a3b8;
+  --shadow: 0 4px 24px rgba(124,92,252,0.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;font-family:inherit}
+input,select,textarea{font-family:inherit}
+.hidden{display:none!important}
+
+/* NAVBAR */
+#navbar{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:var(--bg2);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:8px;padding:0 20px;height:60px;
+}
+.nav-logo{font-size:1.2rem;font-weight:800;color:var(--accent2);margin-right:12px;white-space:nowrap}
+.nav-logo span{color:var(--accent3)}
+.nav-links{display:flex;gap:4px;flex:1;flex-wrap:wrap}
+.nav-btn{padding:6px 14px;border-radius:20px;border:none;background:transparent;color:var(--text2);font-size:.88rem;font-weight:500;transition:all .2s}
+.nav-btn:hover,.nav-btn.active{background:var(--accent);color:#fff}
+.nav-right{display:flex;align-items:center;gap:8px;margin-left:auto}
+.icon-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--card);color:var(--text);display:flex;align-items:center;justify-content:center;font-size:1rem;transition:all .2s}
+.icon-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.lang-sel{background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:4px 8px;font-size:.82rem}
+
+/* PAGES */
+.page{display:none;padding-top:70px;min-height:100vh}
+.page.active{display:block}
+
+/* HERO */
+#page-home .hero{
+  background:linear-gradient(135deg,var(--bg2) 0%,var(--bg3) 100%);
+  padding:80px 20px 60px;text-align:center;position:relative;overflow:hidden;
+}
+#page-home .hero::before{
+  content:'';position:absolute;top:-40%;left:50%;transform:translateX(-50%);
+  width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(124,92,252,.18) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:900;line-height:1.1;margin-bottom:16px}
+.hero h1 .hl{color:var(--accent2)}
+.hero p{font-size:1.1rem;color:var(--text2);max-width:560px;margin:0 auto 32px}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-primary{padding:13px 28px;border-radius:30px;border:none;background:var(--accent);color:#fff;font-size:1rem;font-weight:700;transition:all .2s;box-shadow:0 4px 16px rgba(124,92,252,.3)}
+.btn-primary:hover{background:#6d4de0;transform:translateY(-2px)}
+.btn-outline{padding:13px 28px;border-radius:30px;border:2px solid var(--accent);background:transparent;color:var(--accent2);font-size:1rem;font-weight:700;transition:all .2s}
+.btn-outline:hover{background:var(--accent);color:#fff}
+.hero-stats{display:flex;gap:32px;justify-content:center;margin-top:48px;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-n{font-size:2rem;font-weight:900;color:var(--accent2)}
+.stat-l{font-size:.85rem;color:var(--text3)}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;padding:48px 20px;max-width:1100px;margin:0 auto}
+.feature-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 24px;transition:all .2s}
+.feature-card:hover{border-color:var(--accent);transform:translateY(-4px);box-shadow:var(--shadow)}
+.feat-icon{font-size:2rem;margin-bottom:12px}
+.feat-title{font-weight:700;margin-bottom:8px;font-size:1rem}
+.feat-desc{font-size:.88rem;color:var(--text2);line-height:1.6}
+.section-title{text-align:center;font-size:1.7rem;font-weight:800;margin-bottom:8px}
+.section-sub{text-align:center;color:var(--text2);font-size:.95rem;margin-bottom:32px}
+
+/* REGISTER / LOGIN */
+.auth-wrap{max-width:520px;margin:40px auto;padding:0 20px}
+.auth-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:40px 36px}
+.auth-card h2{font-size:1.6rem;font-weight:800;margin-bottom:6px}
+.auth-card p{color:var(--text2);font-size:.9rem;margin-bottom:28px}
+.form-group{margin-bottom:18px}
+.form-group label{display:block;font-size:.85rem;font-weight:600;margin-bottom:6px;color:var(--text2)}
+.form-group input,.form-group select,.form-group textarea{
+  width:100%;padding:11px 14px;border-radius:var(--radius2);
+  border:1px solid var(--border);background:var(--bg2);
+  color:var(--text);font-size:.95rem;transition:border .2s;
+}
+.form-group input:focus,.form-group select:focus{outline:none;border-color:var(--accent)}
+.interest-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.chip{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--bg2);color:var(--text2);font-size:.82rem;cursor:pointer;transition:all .2s;user-select:none}
+.chip.selected{background:var(--accent);color:#fff;border-color:var(--accent)}
+.auth-switch{text-align:center;margin-top:20px;font-size:.88rem;color:var(--text2)}
+.auth-switch button{color:var(--accent2);background:none;border:none;font-weight:600;cursor:pointer}
+.btn-full{width:100%;padding:13px;border-radius:30px;border:none;background:var(--accent);color:#fff;font-size:1rem;font-weight:700;transition:all .2s}
+.btn-full:hover{background:#6d4de0}
+.error-msg{color:var(--red);font-size:.85rem;margin-top:8px}
+
+/* CATALOG */
+.catalog-wrap{max-width:1100px;margin:0 auto;padding:30px 20px}
+.catalog-filters{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:24px;display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end}
+.filter-group{display:flex;flex-direction:column;gap:4px;min-width:140px}
+.filter-group label{font-size:.8rem;font-weight:600;color:var(--text3)}
+.filter-group select,.filter-group input{padding:8px 10px;border-radius:var(--radius2);border:1px solid var(--border);background:var(--bg2);color:var(--text);font-size:.88rem}
+.search-bar{flex:1;min-width:200px}
+.search-bar input{width:100%;padding:10px 14px;border-radius:30px;border:1px solid var(--border);background:var(--bg2);color:var(--text)}
+.opportunities-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
+.opp-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:22px;transition:all .2s;position:relative}
+.opp-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:var(--shadow)}
+.opp-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.75rem;font-weight:700;margin-bottom:10px}
+.badge-stem{background:rgba(56,189,248,.15);color:var(--accent3)}
+.badge-business{background:rgba(251,191,36,.15);color:var(--yellow)}
+.badge-research{background:rgba(52,211,153,.15);color:var(--green)}
+.badge-uni{background:rgba(167,139,250,.15);color:var(--accent2)}
+.badge-olympiad{background:rgba(248,113,113,.15);color:var(--red)}
+.badge-volunteer{background:rgba(52,211,153,.12);color:var(--green)}
+.badge-summer{background:rgba(251,191,36,.12);color:var(--yellow)}
+.opp-title{font-size:1rem;font-weight:700;margin-bottom:6px;line-height:1.3}
+.opp-desc{font-size:.84rem;color:var(--text2);margin-bottom:12px;line-height:1.5}
+.opp-meta{display:flex;gap:12px;flex-wrap:wrap;font-size:.78rem;color:var(--text3);margin-bottom:14px}
+.opp-meta span{display:flex;align-items:center;gap:4px}
+.opp-actions{display:flex;gap:8px}
+.btn-sm{padding:7px 16px;border-radius:20px;border:none;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-apply{background:var(--accent);color:#fff}
+.btn-apply:hover{background:#6d4de0}
+.btn-save{background:var(--card2);border:1px solid var(--border);color:var(--text2)}
+.btn-save:hover,.btn-save.saved{background:rgba(251,191,36,.15);color:var(--yellow);border-color:var(--yellow)}
+.no-results{text-align:center;padding:60px 20px;color:var(--text3)}
+
+/* COURSES */
+.courses-wrap{max-width:1100px;margin:0 auto;padding:30px 20px}
+.courses-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
+.course-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all .2s;cursor:pointer}
+.course-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:var(--shadow)}
+.course-banner{height:100px;display:flex;align-items:center;justify-content:center;font-size:2.5rem}
+.course-body{padding:20px}
+.course-level{font-size:.75rem;font-weight:700;color:var(--accent2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.course-title{font-size:1rem;font-weight:700;margin-bottom:6px}
+.course-desc{font-size:.83rem;color:var(--text2);margin-bottom:12px;line-height:1.5}
+.course-meta{display:flex;gap:12px;font-size:.78rem;color:var(--text3);margin-bottom:14px}
+.progress-bar-wrap{margin-bottom:12px}
+.progress-bar-wrap label{font-size:.78rem;color:var(--text3);margin-bottom:4px;display:flex;justify-content:space-between}
+.progress-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;transition:width .4s}
+.btn-enroll{width:100%;padding:10px;border-radius:8px;border:none;background:var(--accent);color:#fff;font-weight:700;font-size:.9rem;transition:all .2s}
+.btn-enroll:hover{background:#6d4de0}
+.btn-continue{background:var(--green);color:#1a1a2e}
+.btn-continue:hover{background:#2ec87b}
+
+/* COURSE DETAIL */
+.course-detail{max-width:820px;margin:0 auto;padding:30px 20px}
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:var(--text2);font-size:.88rem;margin-bottom:20px;cursor:pointer;transition:color .2s}
+.back-btn:hover{color:var(--accent2)}
+.course-detail-header{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:20px}
+.lesson-list{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px}
+.lesson-item{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;cursor:pointer;transition:background .2s}
+.lesson-item:last-child{border-bottom:none}
+.lesson-item:hover{background:var(--card2)}
+.lesson-item.active{background:rgba(124,92,252,.1);border-left:3px solid var(--accent)}
+.lesson-item.done .lesson-icon{background:var(--green);color:#fff}
+.lesson-icon{width:32px;height:32px;border-radius:50%;background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+.lesson-info{flex:1}
+.lesson-title-text{font-size:.9rem;font-weight:600}
+.lesson-dur{font-size:.78rem;color:var(--text3)}
+.lesson-content-box{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:20px}
+.video-placeholder{background:var(--bg3);border-radius:var(--radius2);height:240px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;margin-bottom:20px;cursor:pointer;transition:background .2s}
+.video-placeholder:hover{background:var(--card2)}
+.play-btn{width:60px;height:60px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:#fff}
+.quiz-box{background:var(--bg2);border-radius:var(--radius2);padding:20px;margin-top:20px}
+.quiz-box h4{font-weight:700;margin-bottom:14px}
+.quiz-opt{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;border:1px solid var(--border);margin-bottom:8px;cursor:pointer;transition:all .2s;font-size:.9rem}
+.quiz-opt:hover{border-color:var(--accent);background:rgba(124,92,252,.08)}
+.quiz-opt.selected{border-color:var(--accent);background:rgba(124,92,252,.15)}
+.quiz-opt.correct{border-color:var(--green);background:rgba(52,211,153,.15);color:var(--green)}
+.quiz-opt.wrong{border-color:var(--red);background:rgba(248,113,113,.15);color:var(--red)}
+.quiz-opt input{accent-color:var(--accent)}
+.cert-box{background:linear-gradient(135deg,var(--accent),var(--accent3));border-radius:var(--radius);padding:28px;text-align:center;color:#fff;margin-top:20px}
+
+/* DASHBOARD */
+.dash-wrap{max-width:1000px;margin:0 auto;padding:30px 20px}
+.dash-welcome{font-size:1.5rem;font-weight:800;margin-bottom:24px}
+.dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:28px}
+.dash-stat{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center}
+.dash-stat-n{font-size:2rem;font-weight:900;color:var(--accent2)}
+.dash-stat-l{font-size:.82rem;color:var(--text3);margin-top:4px}
+.dash-section-title{font-size:1rem;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.dash-section{margin-bottom:28px}
+.deadline-list{display:flex;flex-direction:column;gap:10px}
+.deadline-item{background:var(--card);border:1px solid var(--border);border-radius:var(--radius2);padding:14px 18px;display:flex;align-items:center;gap:14px}
+.deadline-dot{width:10px;height:10px;border-radius:50%;background:var(--yellow);flex-shrink:0}
+.deadline-dot.urgent{background:var(--red)}
+.deadline-info{flex:1}
+.deadline-name{font-size:.9rem;font-weight:600}
+.deadline-date{font-size:.78rem;color:var(--text3)}
+.saved-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.saved-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius2);padding:16px;position:relative}
+.saved-card-title{font-size:.9rem;font-weight:700;margin-bottom:4px}
+.saved-card-meta{font-size:.78rem;color:var(--text3)}
+.unsave-btn{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--text3);font-size:.9rem;cursor:pointer}
+.unsave-btn:hover{color:var(--red)}
+
+/* ADMIN */
+.admin-wrap{max-width:1000px;margin:0 auto;padding:30px 20px}
+.admin-tabs{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+.admin-tab{padding:8px 18px;border-radius:20px;border:1px solid var(--border);background:var(--card);color:var(--text2);font-size:.88rem;font-weight:600;transition:all .2s}
+.admin-tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.admin-panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px}
+.admin-panel h3{font-size:1.1rem;font-weight:700;margin-bottom:20px}
+.admin-list{display:flex;flex-direction:column;gap:10px;margin-top:20px}
+.admin-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);padding:14px 16px;display:flex;align-items:center;gap:12px}
+.admin-item-title{flex:1;font-size:.9rem;font-weight:600}
+.admin-item-actions{display:flex;gap:6px}
+.btn-edit{padding:5px 12px;border-radius:6px;border:1px solid var(--accent);background:transparent;color:var(--accent2);font-size:.78rem;cursor:pointer}
+.btn-delete{padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--red);font-size:.78rem;cursor:pointer}
+.btn-delete:hover{background:var(--red);color:#fff}
+.btn-add-new{margin-bottom:16px;display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:20px;border:1px dashed var(--accent);background:transparent;color:var(--accent2);font-size:.88rem;cursor:pointer;transition:all .2s}
+.btn-add-new:hover{background:rgba(124,92,252,.1)}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:32px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;position:relative}
+.modal h3{font-size:1.2rem;font-weight:700;margin-bottom:20px}
+.modal-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--text3);font-size:1.2rem;cursor:pointer}
+.modal-close:hover{color:var(--text)}
+
+/* AI CHAT */
+#ai-fab{position:fixed;bottom:24px;right:24px;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent3));border:none;color:#fff;font-size:1.3rem;box-shadow:0 4px 20px rgba(124,92,252,.4);z-index:150;transition:all .2s}
+#ai-fab:hover{transform:scale(1.1)}
+#ai-panel{display:none;position:fixed;bottom:88px;right:24px;width:340px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 8px 32px rgba(0,0,0,.25);z-index:149;overflow:hidden}
+#ai-panel.open{display:flex;flex-direction:column}
+.ai-header{background:linear-gradient(90deg,var(--accent),var(--accent3));padding:14px 18px;color:#fff;display:flex;align-items:center;justify-content:space-between}
+.ai-header h4{font-size:.95rem;font-weight:700}
+.ai-msgs{flex:1;max-height:280px;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.ai-msg{max-width:85%;padding:10px 14px;border-radius:12px;font-size:.85rem;line-height:1.5}
+.ai-msg.bot{background:var(--bg2);border:1px solid var(--border);align-self:flex-start}
+.ai-msg.user{background:var(--accent);color:#fff;align-self:flex-end}
+.ai-input-row{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border)}
+.ai-input-row input{flex:1;padding:8px 12px;border-radius:20px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-size:.85rem}
+.ai-send{width:36px;height:36px;border-radius:50%;background:var(--accent);border:none;color:#fff;font-size:.9rem}
+
+/* CALENDAR */
+.calendar-wrap{max-width:820px;margin:0 auto;padding:30px 20px}
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-day-name{text-align:center;font-size:.75rem;font-weight:700;color:var(--text3);padding:6px 0}
+.cal-day{min-height:64px;background:var(--card);border:1px solid var(--border);border-radius:6px;padding:6px;position:relative;font-size:.8rem}
+.cal-day.other-month{opacity:.35}
+.cal-day.today{border-color:var(--accent)}
+.cal-event{background:var(--accent);color:#fff;border-radius:3px;padding:2px 4px;font-size:.7rem;margin-top:2px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cal-event.deadline{background:var(--red)}
+
+/* ROADMAP */
+.roadmap-wrap{max-width:820px;margin:0 auto;padding:30px 20px}
+.rm-grade{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px}
+.rm-grade-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;cursor:pointer}
+.rm-grade-num{width:40px;height:40px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1rem;flex-shrink:0}
+.rm-grade-title{font-size:1.1rem;font-weight:700}
+.rm-items{display:flex;flex-direction:column;gap:8px}
+.rm-item{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border)}
+.rm-item:last-child{border-bottom:none}
+.rm-bullet{color:var(--accent2);margin-top:2px;font-size:.9rem}
+.rm-text{font-size:.88rem;color:var(--text2);line-height:1.5}
+
+/* CERT */
+.cert-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:300;align-items:center;justify-content:center}
+.cert-overlay.open{display:flex}
+.cert-card{background:linear-gradient(135deg,#1a0a3a,#0a1a3a);border:2px solid var(--accent2);border-radius:20px;padding:48px;text-align:center;max-width:500px;width:90%;position:relative}
+.cert-card h2{font-size:1.8rem;font-weight:900;color:#fff;margin-bottom:8px}
+.cert-card .cert-sub{color:var(--accent2);font-size:1rem;margin-bottom:24px}
+.cert-name{font-size:1.4rem;font-weight:800;color:var(--accent2);margin-bottom:8px}
+.cert-course{font-size:1.1rem;color:#fff;margin-bottom:24px}
+.cert-seal{font-size:3rem;margin-bottom:16px}
+.cert-date{font-size:.85rem;color:var(--text3)}
+.btn-cert-close{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.1);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1rem}
+
+/* TOAST */
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--card);border:1px solid var(--border);border-radius:30px;padding:12px 22px;font-size:.9rem;box-shadow:0 4px 20px rgba(0,0,0,.25);opacity:0;transition:all .3s;z-index:500;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  #navbar .nav-links{display:none}
+  .hero h1{font-size:1.8rem}
+  .courses-grid,.opportunities-grid{grid-template-columns:1fr}
+  .modal{margin:16px;padding:24px}
+  #ai-panel{width:calc(100vw - 32px);right:16px}
+}
+
+.tag-recommend{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.72rem;background:rgba(52,211,153,.15);color:var(--green);margin-left:6px;font-weight:600}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <div class="nav-logo">Mentoria<span>Hub</span></div>
+  <div class="nav-links" id="navLinks">
+    <button class="nav-btn" onclick="showPage('home')" data-page="home" data-i18n="nav_home">Главная</button>
+    <button class="nav-btn" onclick="showPage('catalog')" data-page="catalog" data-i18n="nav_catalog">Возможности</button>
+    <button class="nav-btn" onclick="showPage('courses')" data-page="courses" data-i18n="nav_courses">Курсы</button>
+    <button class="nav-btn" onclick="showPage('calendar')" data-page="calendar" data-i18n="nav_calendar">Календарь</button>
+    <button class="nav-btn" onclick="showPage('roadmap')" data-page="roadmap" data-i18n="nav_roadmap">Roadmap</button>
+    <button class="nav-btn" id="dashNav" onclick="showPage('dashboard')" data-page="dashboard" data-i18n="nav_dashboard">Кабинет</button>
+    <button class="nav-btn" id="adminNav" onclick="showPage('admin')" data-page="admin" style="display:none" data-i18n="nav_admin">Админ</button>
+  </div>
+  <div class="nav-right">
+    <select class="lang-sel" id="langSel" onchange="changeLang(this.value)">
+      <option value="ru">RU</option>
+      <option value="en">EN</option>
+      <option value="kk">KZ</option>
+    </select>
+    <button class="icon-btn" onclick="toggleTheme()" title="Тема">🌙</button>
+    <button class="icon-btn" id="authNavBtn" onclick="showPage('auth')" data-i18n="nav_login">👤</button>
+  </div>
+</nav>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- PAGES -->
+
+<!-- HOME -->
+<div id="page-home" class="page active">
+  <div class="hero">
+    <h1><span data-i18n="hero_title1">Найди возможности.</span><br><span class="hl" data-i18n="hero_title2">Учись без границ.</span></h1>
+    <p data-i18n="hero_sub">Mentoria Hub — единая платформа для поиска конкурсов, стипендий, программ и асинхронных курсов для учеников 8–11 классов.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="showPage('catalog')" data-i18n="btn_find_opp">🔍 Найти возможности</button>
+      <button class="btn-outline" onclick="showPage('courses')" data-i18n="btn_start_learn">📚 Начать обучение</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-n">10+</div><div class="stat-l" data-i18n="stat_opp">Возможностей</div></div>
+      <div class="stat"><div class="stat-n">5</div><div class="stat-l" data-i18n="stat_courses">Курсов</div></div>
+      <div class="stat"><div class="stat-n">8–11</div><div class="stat-l" data-i18n="stat_grades">Классы</div></div>
+      <div class="stat"><div class="stat-n">🌍</div><div class="stat-l" data-i18n="stat_countries">Страны</div></div>
+    </div>
+  </div>
+  <div style="padding:48px 20px;text-align:center">
+    <h2 class="section-title" data-i18n="feat_title">Всё в одном месте</h2>
+    <p class="section-sub" data-i18n="feat_sub">Mentoria Hub помогает расти академически и за пределами класса</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card"><div class="feat-icon">🏆</div><div class="feat-title" data-i18n="f1t">Конкурсы и олимпиады</div><div class="feat-desc" data-i18n="f1d">Находи и сохраняй актуальные олимпиады, хакатоны и конкурсы с дедлайнами.</div></div>
+    <div class="feature-card"><div class="feat-icon">📖</div><div class="feat-title" data-i18n="f2t">Асинхронные курсы</div><div class="feat-desc" data-i18n="f2d">Учись в своём темпе: видео-уроки, материалы и мини-тесты без живых занятий.</div></div>
+    <div class="feature-card"><div class="feat-icon">🎯</div><div class="feat-title" data-i18n="f3t">Персональные рекомендации</div><div class="feat-desc" data-i18n="f3d">Платформа подбирает курсы и возможности под твои интересы и цели.</div></div>
+    <div class="feature-card"><div class="feat-icon">📊</div><div class="feat-title" data-i18n="f4t">Отслеживай прогресс</div><div class="feat-desc" data-i18n="f4d">Видь прогресс по курсам и не пропусти дедлайны в личном кабинете.</div></div>
+    <div class="feature-card"><div class="feat-icon">🌐</div><div class="feat-title" data-i18n="f5t">Международные возможности</div><div class="feat-desc" data-i18n="f5d">Программы для учеников из Казахстана и других стран.</div></div>
+    <div class="feature-card"><div class="feat-icon">🤖</div><div class="feat-title" data-i18n="f6t">AI-ассистент</div><div class="feat-desc" data-i18n="f6d">Задай вопрос AI — он поможет найти подходящие программы и курсы.</div></div>
+  </div>
+  <div style="text-align:center;padding:40px 20px 60px">
+    <button class="btn-primary" onclick="showPage('auth')" data-i18n="btn_join">🚀 Присоединиться к Mentoria</button>
+  </div>
+</div>
+
+<!-- AUTH -->
+<div id="page-auth" class="page">
+  <div class="auth-wrap">
+    <div class="auth-card" id="loginCard">
+      <h2 data-i18n="login_title">Войти в аккаунт</h2>
+      <p data-i18n="login_sub">Добро пожаловать в Mentoria Hub</p>
+      <div class="form-group"><label data-i18n="lbl_email">Email</label><input type="email" id="loginEmail" placeholder="your@email.com"/></div>
+      <div class="form-group"><label data-i18n="lbl_pass">Пароль</label><input type="password" id="loginPass" placeholder="••••••••"/></div>
+      <div class="error-msg hidden" id="loginErr"></div>
+      <button class="btn-full" onclick="doLogin()" data-i18n="btn_login">Войти</button>
+      <div class="auth-switch"><span data-i18n="no_acc">Нет аккаунта?</span> <button onclick="toggleAuth('register')" data-i18n="btn_reg_switch">Зарегистрироваться</button></div>
+    </div>
+    <div class="auth-card hidden" id="registerCard">
+      <h2 data-i18n="reg_title">Создать аккаунт</h2>
+      <p data-i18n="reg_sub">Присоединяйся к Mentoria Hub</p>
+      <div class="form-group"><label data-i18n="lbl_name">Имя</label><input type="text" id="regName" placeholder="Алихан"/></div>
+      <div class="form-group"><label data-i18n="lbl_email">Email</label><input type="email" id="regEmail" placeholder="your@email.com"/></div>
+      <div class="form-group"><label data-i18n="lbl_pass">Пароль</label><input type="password" id="regPass" placeholder="••••••••"/></div>
+      <div class="form-group">
+        <label data-i18n="lbl_grade">Класс</label>
+        <select id="regGrade">
+          <option value="">— выбери класс —</option>
+          <option>8</option><option>9</option><option>10</option><option>11</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label data-i18n="lbl_interests">Интересы</label>
+        <div class="interest-chips" id="interestChips">
+          <span class="chip" data-val="STEM">STEM</span>
+          <span class="chip" data-val="Business" data-i18n-chip="Business">Бизнес</span>
+          <span class="chip" data-val="Olympiad" data-i18n-chip="Olympiad">Олимпиады</span>
+          <span class="chip" data-val="Research" data-i18n-chip="Research">Исследования</span>
+          <span class="chip" data-val="English" data-i18n-chip="English">Английский</span>
+          <span class="chip" data-val="University" data-i18n-chip="University">Поступление в вуз</span>
+          <span class="chip" data-val="Programming" data-i18n-chip="Programming">Программирование</span>
+          <span class="chip" data-val="Finance" data-i18n-chip="Finance">Финансы</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label data-i18n="lbl_goals">Цели</label>
+        <select id="regGoal">
+          <option value="">— выбери цель —</option>
+          <option value="uni" data-i18n="goal_uni">Поступление в университет</option>
+          <option value="olymp" data-i18n="goal_olymp">Победа в олимпиадах</option>
+          <option value="skills" data-i18n="goal_skills">Развить навыки</option>
+          <option value="career" data-i18n="goal_career">Карьера и стажировки</option>
+        </select>
+      </div>
+      <div class="error-msg hidden" id="regErr"></div>
+      <button class="btn-full" onclick="doRegister()" data-i18n="btn_register">Зарегистрироваться</button>
+      <div class="auth-switch"><span data-i18n="has_acc">Есть аккаунт?</span> <button onclick="toggleAuth('login')" data-i18n="btn_login_switch">Войти</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- CATALOG -->
+<div id="page-catalog" class="page">
+  <div class="catalog-wrap">
+    <h2 class="section-title" data-i18n="cat_title">Каталог возможностей</h2>
+    <p class="section-sub" data-i18n="cat_sub">Конкурсы, стипендии, программы и многое другое</p>
+    <div class="catalog-filters">
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="🔍 Поиск..." oninput="filterOpps()"/>
+      </div>
+      <div class="filter-group">
+        <label data-i18n="fil_category">Направление</label>
+        <select id="filterCat" onchange="filterOpps()">
+          <option value="" data-i18n="fil_all">Все</option>
+          <option value="STEM">STEM</option>
+          <option value="Business" data-i18n="fil_biz">Бизнес</option>
+          <option value="Research" data-i18n="fil_res">Исследования</option>
+          <option value="Olympiad" data-i18n="fil_olymp">Олимпиада</option>
+          <option value="University" data-i18n="fil_uni">Поступление</option>
+          <option value="Summer" data-i18n="fil_summer">Летняя школа</option>
+          <option value="Volunteer" data-i18n="fil_vol">Волонтёрство</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label data-i18n="fil_grade">Класс</label>
+        <select id="filterGrade" onchange="filterOpps()">
+          <option value="">Все</option>
+          <option>8</option><option>9</option><option>10</option><option>11</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label data-i18n="fil_format">Формат</label>
+        <select id="filterFormat" onchange="filterOpps()">
+          <option value="" data-i18n="fil_all">Все</option>
+          <option value="Online" data-i18n="fmt_online">Онлайн</option>
+          <option value="Offline" data-i18n="fmt_offline">Оффлайн</option>
+          <option value="Hybrid" data-i18n="fmt_hybrid">Гибрид</option>
+        </select>
+      </div>
+    </div>
+    <div class="opportunities-grid" id="oppGrid"></div>
+  </div>
+</div>
+
+<!-- COURSES -->
+<div id="page-courses" class="page">
+  <div class="courses-wrap">
+    <h2 class="section-title" data-i18n="cour_title">Курсы Mentoria</h2>
+    <p class="section-sub" data-i18n="cour_sub">Учись в своём темпе — уроки, задания и тесты</p>
+    <div class="courses-grid" id="coursesGrid"></div>
+  </div>
+</div>
+
+<!-- COURSE DETAIL -->
+<div id="page-course-detail" class="page">
+  <div class="course-detail">
+    <div class="back-btn" onclick="showPage('courses')">← <span data-i18n="back_courses">Назад к курсам</span></div>
+    <div id="courseDetailContent"></div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="page-dashboard" class="page">
+  <div class="dash-wrap">
+    <div class="dash-welcome" id="dashWelcome">👋 Добро пожаловать!</div>
+    <div class="dash-grid">
+      <div class="dash-stat"><div class="dash-stat-n" id="dsSaved">0</div><div class="dash-stat-l" data-i18n="ds_saved">Сохранено</div></div>
+      <div class="dash-stat"><div class="dash-stat-n" id="dsEnrolled">0</div><div class="dash-stat-l" data-i18n="ds_enrolled">Записан на курсов</div></div>
+      <div class="dash-stat"><div class="dash-stat-n" id="dsCompleted">0</div><div class="dash-stat-l" data-i18n="ds_completed">Уроков завершено</div></div>
+      <div class="dash-stat"><div class="dash-stat-n" id="dsCerts">0</div><div class="dash-stat-l" data-i18n="ds_certs">Сертификатов</div></div>
+    </div>
+    <div class="dash-section">
+      <div class="dash-section-title">⏰ <span data-i18n="ds_deadlines">Ближайшие дедлайны</span></div>
+      <div class="deadline-list" id="deadlineList"></div>
+    </div>
+    <div class="dash-section">
+      <div class="dash-section-title">📚 <span data-i18n="ds_my_courses">Мои курсы</span></div>
+      <div class="courses-grid" id="dashCourseList"></div>
+    </div>
+    <div class="dash-section">
+      <div class="dash-section-title">⭐ <span data-i18n="ds_saved_opps">Сохранённые возможности</span></div>
+      <div class="saved-grid" id="savedOppList"></div>
+    </div>
+    <div class="dash-section">
+      <div class="dash-section-title">🎯 <span data-i18n="ds_recs">Рекомендации</span></div>
+      <div class="opportunities-grid" id="dashRecs"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CALENDAR -->
+<div id="page-calendar" class="page">
+  <div class="calendar-wrap">
+    <div class="cal-header">
+      <button class="icon-btn" onclick="changeMonth(-1)">‹</button>
+      <h2 id="calTitle" style="font-weight:800;font-size:1.3rem"></h2>
+      <button class="icon-btn" onclick="changeMonth(1)">›</button>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+  </div>
+</div>
+
+<!-- ROADMAP -->
+<div id="page-roadmap" class="page">
+  <div class="roadmap-wrap">
+    <h2 class="section-title" data-i18n="rm_title">Roadmap 9–12 классов</h2>
+    <p class="section-sub" data-i18n="rm_sub">Что делать в каждом классе, чтобы поступить в лучший университет</p>
+    <div id="roadmapContent"></div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="page-admin" class="page">
+  <div class="admin-wrap">
+    <h2 class="section-title" data-i18n="adm_title">Панель администратора</h2>
+    <p class="section-sub" data-i18n="adm_sub">Управляй курсами и возможностями</p>
+    <div class="admin-tabs">
+      <button class="admin-tab active" onclick="switchAdminTab('opps')" data-i18n="adm_tab_opps">Возможности</button>
+      <button class="admin-tab" onclick="switchAdminTab('courses')" data-i18n="adm_tab_courses">Курсы</button>
+      <button class="admin-tab" onclick="switchAdminTab('users')" data-i18n="adm_tab_users">Пользователи</button>
+    </div>
+    <div id="adminOppsPanel" class="admin-panel">
+      <h3 data-i18n="adm_manage_opps">Управление возможностями</h3>
+      <button class="btn-add-new" onclick="openOppModal(null)" data-i18n="adm_add_opp">+ Добавить возможность</button>
+      <div class="admin-list" id="adminOppList"></div>
+    </div>
+    <div id="adminCoursesPanel" class="admin-panel hidden">
+      <h3 data-i18n="adm_manage_courses">Управление курсами</h3>
+      <button class="btn-add-new" onclick="openCourseModal(null)" data-i18n="adm_add_course">+ Добавить курс</button>
+      <div class="admin-list" id="adminCourseList"></div>
+    </div>
+    <div id="adminUsersPanel" class="admin-panel hidden">
+      <h3 data-i18n="adm_users">Пользователи</h3>
+      <div class="admin-list" id="adminUserList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="oppModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('oppModal')">✕</button>
+    <h3 id="oppModalTitle">Добавить возможность</h3>
+    <input type="hidden" id="editOppId"/>
+    <div class="form-group"><label>Название</label><input type="text" id="mOppName" placeholder="Название возможности"/></div>
+    <div class="form-group"><label>Описание</label><textarea id="mOppDesc" rows="3" style="padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text);width:100%;resize:vertical"></textarea></div>
+    <div class="form-group"><label>Категория</label>
+      <select id="mOppCat">
+        <option value="STEM">STEM</option><option value="Business">Бизнес</option>
+        <option value="Research">Исследования</option><option value="Olympiad">Олимпиада</option>
+        <option value="University">Поступление</option><option value="Summer">Летняя школа</option>
+        <option value="Volunteer">Волонтёрство</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Дедлайн</label><input type="date" id="mOppDeadline"/></div>
+    <div class="form-group"><label>Формат</label>
+      <select id="mOppFormat"><option value="Online">Онлайн</option><option value="Offline">Оффлайн</option><option value="Hybrid">Гибрид</option></select>
+    </div>
+    <div class="form-group"><label>Класс (через запятую, напр. 9,10,11)</label><input type="text" id="mOppGrades" placeholder="8,9,10,11"/></div>
+    <div class="form-group"><label>Ссылка для подачи</label><input type="url" id="mOppLink" placeholder="https://..."/></div>
+    <button class="btn-full" onclick="saveOpp()" style="margin-top:8px">Сохранить</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="courseModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('courseModal')">✕</button>
+    <h3 id="courseModalTitle">Добавить курс</h3>
+    <input type="hidden" id="editCourseId"/>
+    <div class="form-group"><label>Название курса</label><input type="text" id="mCourseName"/></div>
+    <div class="form-group"><label>Описание</label><textarea id="mCourseDesc" rows="3" style="padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text);width:100%;resize:vertical"></textarea></div>
+    <div class="form-group"><label>Уровень</label>
+      <select id="mCourseLevel"><option value="Beginner">Начинающий</option><option value="Intermediate">Средний</option><option value="Advanced">Продвинутый</option></select>
+    </div>
+    <div class="form-group"><label>Категория</label>
+      <select id="mCourseCat"><option value="STEM">STEM</option><option value="Business">Бизнес</option><option value="English">Английский</option><option value="University">Поступление</option><option value="Programming">Программирование</option></select>
+    </div>
+    <div class="form-group"><label>Эмодзи / иконка</label><input type="text" id="mCourseEmoji" placeholder="📐" maxlength="4"/></div>
+    <button class="btn-full" onclick="saveCourse()" style="margin-top:8px">Сохранить</button>
+  </div>
+</div>
+
+<!-- CERTIFICATE -->
+<div class="cert-overlay" id="certOverlay">
+  <div class="cert-card">
+    <button class="btn-cert-close" onclick="closeCert()">✕</button>
+    <div class="cert-seal">🏅</div>
+    <h2>Mentoria Hub</h2>
+    <div class="cert-sub">Сертификат об окончании</div>
+    <div class="cert-name" id="certName"></div>
+    <div class="cert-course" id="certCourse"></div>
+    <div class="cert-date" id="certDate"></div>
+    <button class="btn-full" style="margin-top:16px;background:rgba(255,255,255,.15);color:#fff;border:2px solid rgba(255,255,255,.3)" onclick="closeCert()">Закрыть</button>
+  </div>
+</div>
+
+<!-- AI ASSISTANT -->
+<button id="ai-fab" onclick="toggleAI()" title="AI Ассистент">🤖</button>
+<div id="ai-panel">
+  <div class="ai-header">
+    <h4>🤖 Mentoria AI</h4>
+    <button style="background:none;border:none;color:#fff;cursor:pointer;font-size:1rem" onclick="toggleAI()">✕</button>
+  </div>
+  <div class="ai-msgs" id="aiMsgs">
+    <div class="ai-msg bot" data-i18n="ai_greeting">Привет! Я AI-ассистент Mentoria. Спроси меня о курсах, возможностях или о том, как подготовиться к поступлению! 🎓</div>
+  </div>
+  <div class="ai-input-row">
+    <input type="text" id="aiInput" placeholder="Задай вопрос..." onkeydown="if(event.key==='Enter')sendAI()"/>
+    <button class="ai-send" onclick="sendAI()">➤</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════
+
+const DEFAULT_OPPS = [
+  {id:'o1',name:'Республиканская олимпиада по математике',desc:'Ежегодная олимпиада для учеников 8–11 классов Казахстана по математике, отбор в международные соревнования.',category:'Olympiad',deadline:'2025-02-15',format:'Offline',grades:[8,9,10,11],link:'https://edu.gov.kz',emoji:'🧮'},
+  {id:'o2',name:'MIT LaunchX Summer Program',desc:'Предпринимательская программа MIT для старшеклассников. Создай стартап за 4 недели вместе с командой.',category:'Business',deadline:'2025-03-01',format:'Online',grades:[10,11],link:'https://launchx.com',emoji:'🚀'},
+  {id:'o3',name:'Intel ISEF — Международная выставка',desc:'Самый престижный международный конкурс научных проектов для школьников. Победители получают крупные стипендии.',category:'Research',deadline:'2025-01-20',format:'Offline',grades:[9,10,11],link:'https://societyforscience.org/isef',emoji:'🔬'},
+  {id:'o4',name:'Казахстанский хакатон KazHack',desc:'Двухдневный хакатон для школьников по разработке IT-решений для социальных проблем Казахстана.',category:'STEM',deadline:'2025-04-10',format:'Hybrid',grades:[9,10,11],link:'https://kazhack.kz',emoji:'💻'},
+  {id:'o5',name:'Стипендия Болашак',desc:'Государственная стипендия для обучения за рубежом. Подача документов для выпускников 11 класса.',category:'University',deadline:'2025-05-01',format:'Online',grades:[11],link:'https://bolashak.gov.kz',emoji:'🌍'},
+  {id:'o6',name:'Летняя школа Назарбаев Университет',desc:'2-недельная летняя программа по науке, математике и инжинирингу для талантливых школьников Казахстана.',category:'Summer',deadline:'2025-03-31',format:'Offline',grades:[9,10,11],link:'https://nu.edu.kz',emoji:'☀️'},
+  {id:'o7',name:'Конкурс Enactus Kazakhstan',desc:'Международный предпринимательский конкурс. Создай социальный бизнес-проект и защити его перед жюри.',category:'Business',deadline:'2025-04-20',format:'Hybrid',grades:[10,11],link:'https://enactus.kz',emoji:'🤝'},
+  {id:'o8',name:'Волонтёрская программа ЮНИСЕФ',desc:'Волонтёрская программа ЮНИСЕФ для молодёжи: участвуй в проектах по образованию и правам детей.',category:'Volunteer',deadline:'2025-06-01',format:'Online',grades:[8,9,10,11],link:'https://unicef.org',emoji:'💙'},
+  {id:'o9',name:'Олимпиада по информатике (НЦОИ)',desc:'Национальная олимпиада по информатике с отбором на Международную олимпиаду по информатике (IOI).',category:'Olympiad',deadline:'2025-02-28',format:'Offline',grades:[8,9,10,11],link:'https://kcit.kz',emoji:'🖥️'},
+  {id:'o10',name:'Stanford Online High School Summer',desc:'Онлайн-интенсив от Стэнфорда: академическое письмо, критическое мышление, подготовка к поступлению в вуз.',category:'University',deadline:'2025-04-15',format:'Online',grades:[10,11],link:'https://summerinstitutes.spcs.stanford.edu',emoji:'🎓'},
+];
+
+const DEFAULT_COURSES = [
+  {id:'c1',name:'Математика для олимпиад',desc:'Подготовься к школьным и республиканским олимпиадам: алгебра, геометрия, теория чисел и комбинаторика.',level:'Intermediate',category:'STEM',emoji:'📐',color:'linear-gradient(135deg,#1a237e,#283593)',lessons:[
+    {id:'l1',title:'Алгебраические тождества',duration:'25 мин',content:'В этом уроке мы разбираем ключевые алгебраические тождества, которые часто встречаются на олимпиадах. Формулы сокращённого умножения, разложение многочленов и их применение в задачах.',quiz:{q:'Чему равно (a+b)²?',opts:['a²+b²','a²+2ab+b²','2ab+b²','a²-2ab+b²'],correct:1}},
+    {id:'l2',title:'Геометрия: основные теоремы',duration:'30 мин',content:'Теорема Пифагора, теорема Фалеса, вписанные и описанные окружности. Разбор типичных олимпиадных задач по геометрии с несколькими методами решения.',quiz:{q:'Теорема Пифагора: c²=?',opts:['a+b','a²+b²','a²-b²','(a+b)²'],correct:1}},
+    {id:'l3',title:'Теория чисел',duration:'35 мин',content:'НОД и НОК, простые числа, делимость, остатки. Алгоритм Евклида и малая теорема Ферма. Практические задачи олимпиадного уровня.',quiz:{q:'НОД(12, 18) = ?',opts:['2','4','6','3'],correct:2}},
+    {id:'l4',title:'Комбинаторика и вероятность',duration:'40 мин',content:'Перестановки, сочетания, принцип Дирихле, правило произведения. Вероятностные задачи олимпиадного формата.',quiz:{q:'C(5,2) = ?',opts:['10','20','5','15'],correct:0}},
+  ]},
+  {id:'c2',name:'Английский для SAT/IELTS',desc:'Прокачай английский для международных экзаменов: Reading, Writing, Listening, Speaking и Grammar.',level:'Intermediate',category:'English',emoji:'🗣️',color:'linear-gradient(135deg,#1a3a1a,#2d5a27)',lessons:[
+    {id:'l1',title:'Reading Comprehension',duration:'30 мин',content:'Стратегии работы с академическими текстами: skimming, scanning, inference. Разбор типичных вопросов IELTS Reading с примерами из реальных тестов.',quiz:{q:'What does "skimming" mean in reading?',opts:['Reading every word carefully','Reading quickly for main ideas','Looking for specific information','Re-reading difficult parts'],correct:1}},
+    {id:'l2',title:'Academic Writing — Task 2',duration:'35 мин',content:'Структура эссе для IELTS Task 2: introduction, body paragraphs, conclusion. Академический стиль, linking words, аргументация с примерами.',quiz:{q:'In IELTS Writing Task 2, you must write at least:',opts:['150 words','200 words','250 words','300 words'],correct:2}},
+    {id:'l3',title:'Grammar: Advanced Tenses',duration:'25 мин',content:'Present Perfect vs Past Simple, Passive Voice, Conditionals (0,1,2,3). Частые ошибки казахстанских учеников и как их избежать.',quiz:{q:'Choose correct: "If I ___ you, I would study harder."',opts:['am','was','were','be'],correct:2}},
+  ]},
+  {id:'c3',name:'Основы программирования',desc:'Начни программировать с нуля: Python, алгоритмы, структуры данных и первые проекты.',level:'Beginner',category:'Programming',emoji:'💻',color:'linear-gradient(135deg,#1a0a3a,#2d1b5a)',lessons:[
+    {id:'l1',title:'Введение в Python',duration:'30 мин',content:'Установка Python, первая программа "Hello World", переменные, типы данных (int, float, str, bool), ввод-вывод. Практические упражнения прямо в браузере.',quiz:{q:'Как вывести текст в Python?',opts:['echo("Hello")','console.log("Hello")','print("Hello")','System.out.println("Hello")'],correct:2}},
+    {id:'l2',title:'Условия и циклы',duration:'35 мин',content:'if/elif/else, циклы for и while, break и continue. Решение задач: нахождение простых чисел, сумма цифр, палиндром.',quiz:{q:'Что выведет: for i in range(3): print(i)',opts:['1 2 3','0 1 2','0 1 2 3','1 2'],correct:1}},
+    {id:'l3',title:'Функции и списки',duration:'40 мин',content:'Определение функций (def), параметры и возвращаемые значения. Списки, методы списков, list comprehension. Решение задач на функции.',quiz:{q:'Как создать список из 5 нулей?',opts:['[0*5]','[0]×5','[0]*5','zeros(5)'],correct:2}},
+    {id:'l4',title:'Первый проект: Калькулятор',duration:'45 мин',content:'Создаём полноценный калькулятор: операции +−×÷, обработка ошибок, цикл ввода. Добавляем расширенные функции: квадратный корень, степень.',quiz:{q:'Оператор деления с остатком в Python:',opts:['//','%','/','**'],correct:1}},
+  ]},
+  {id:'c4',name:'Подготовка к поступлению в вуз',desc:'Всё о поступлении: выбор университета, мотивационное письмо, рекомендации, портфолио и интервью.',level:'Beginner',category:'University',emoji:'🎓',color:'linear-gradient(135deg,#3a1a0a,#5a2d1b)',lessons:[
+    {id:'l1',title:'Выбор университета',duration:'25 мин',content:'Как выбрать университет: рейтинги (QS, THE, US News), специальности, стоимость обучения, стипендии. Топ-университеты для казахстанских абитуриентов.',quiz:{q:'Какой рейтинг считается наиболее авторитетным для мировых университетов?',opts:['Шанхайский рейтинг','QS World University Rankings','THE Rankings','Forbes'],correct:1}},
+    {id:'l2',title:'Мотивационное письмо (SOP)',duration:'40 мин',content:'Структура Statement of Purpose: почему этот вуз, почему эта специальность, твои достижения, цели. Разбор успешных и неуспешных примеров SOP.',quiz:{q:'Что НЕ стоит писать в мотивационном письме?',opts:['Конкретные достижения','Причины выбора вуза','Шаблонные фразы','Будущие цели'],correct:2}},
+    {id:'l3',title:'Рекомендательные письма',duration:'20 мин',content:'Кого просить о рекомендации, как правильно попросить, что должно быть в рекомендации. Типичные ошибки и советы.',quiz:{q:'Сколько рекомендательных писем обычно требуют топ-университеты?',opts:['1','2','2-3','5+'],correct:2}},
+  ]},
+  {id:'c5',name:'Основы экономики и финансов',desc:'Макро и микроэкономика, личные финансы, инвестиции и предпринимательство для школьников.',level:'Beginner',category:'Business',emoji:'📊',color:'linear-gradient(135deg,#0a2a1a,#1b4a2d)',lessons:[
+    {id:'l1',title:'Спрос и предложение',duration:'25 мин',content:'Закон спроса и предложения, равновесная цена, эластичность. Примеры из реальной жизни: почему растут цены, как работают рынки.',quiz:{q:'Что происходит с ценой при избытке товара?',opts:['Растёт','Падает','Не меняется','Невозможно определить'],correct:1}},
+    {id:'l2',title:'Личные финансы и бюджет',duration:'30 мин',content:'Составление личного бюджета, правило 50/30/20, сбережения и инвестиции. Сложный процент — почему важно начинать рано.',quiz:{q:'Правило 50/30/20: 20% — это:',opts:['Развлечения','Нужды','Сбережения','Еда'],correct:2}},
+    {id:'l3',title:'Введение в предпринимательство',duration:'35 мин',content:'Что такое бизнес-модель, MVP, lean startup. Как найти идею для бизнеса, провести анализ рынка. Истории успеха молодых предпринимателей из Казахстана.',quiz:{q:'MVP расшифровывается как:',opts:['Most Valuable Player','Minimum Viable Product','Maximum Value Plan','Market Value Proposition'],correct:1}},
+  ]},
+];
+
+const ROADMAP_DATA = [
+  {grade:'9',items:[
+    'Определись с интересами: посети дни открытых дверей, возьми пробные уроки по разным предметам.',
+    'Участвуй в школьных олимпиадах по любимым предметам — это первый шаг к республиканским.',
+    'Начни изучать английский язык системно: IELTS потребуется для поступления за рубеж.',
+    'Зарегистрируйся на Mentoria Hub и выбери 1–2 курса по интересам.',
+    'Начни вести портфолио: сохраняй все достижения, грамоты, проекты.',
+  ]},
+  {grade:'10',items:[
+    'Участвуй в республиканских олимпиадах и международных конкурсах (ISEF, Enactus и др.).',
+    'Исследуй программы летних школ (Назарбаев Университет, зарубежные программы).',
+    'Начни готовиться к SAT/IELTS — сдай пробный тест и составь план подготовки.',
+    'Найди ментора в своей области через Mentoria и начни работу над проектом.',
+    'Изучи требования 5–10 университетов мечты: рейтинги, программы, дедлайны.',
+    'Напиши первый черновик мотивационного письма и попроси обратную связь.',
+  ]},
+  {grade:'11',items:[
+    'Сдай SAT/IELTS или другие необходимые тесты (IB, AP, DSAT).',
+    'Подай заявки на Early Decision/Early Action в топ-университеты (дедлайн: ноябрь).',
+    'Запроси рекомендательные письма у 2–3 учителей заранее (минимум за 2 месяца).',
+    'Подай заявку на стипендию Болашак и другие государственные программы.',
+    'Оформи все документы: транскрипты, переводы, нотариальные заверения.',
+    'Продолжай участвовать в активностях — admissions смотрят на консистентность.',
+  ]},
+  {grade:'12',items:[
+    'Завершай Regular Decision заявки — большинство дедлайнов в январе-феврале.',
+    'Сравни предложения о зачислении: финансовая помощь, программы, кампус.',
+    'Подтверди зачисление (May 1 — национальный дедлайн).',
+    'Выпускные экзамены (ЕНТ) — сдай на максимальный балл.',
+    'Подготовься к переезду: виза, жильё, банковский счёт, медицинская страховка.',
+    'Отпразднуй — ты справился! 🎉',
+  ]},
+];
+
+const AI_KB = [
+  {q:['олимпиада','олимпиады','математика'],a:'Для подготовки к олимпиадам рекомендую курс "Математика для олимпиад" — там есть алгебра, геометрия и теория чисел. Также смотри возможности: Республиканская олимпиада по математике и НЦОИ по информатике! 🏆'},
+  {q:['ielts','sat','английский'],a:'Для SAT/IELTS у нас есть курс "Английский для SAT/IELTS" с Reading, Writing и Grammar. Также загляни в Stanford Online High School Summer — отличная практика английского! 📚'},
+  {q:['поступление','университет','вуз'],a:'Для поступления в университет рекомендую курс "Подготовка к поступлению в вуз" — там всё о выборе университета, SOP и рекомендациях. Также рассмотри стипендию Болашак! 🎓'},
+  {q:['программирование','python','код'],a:'Начни с курса "Основы программирования" — Python с нуля, алгоритмы и первые проекты. Потом попробуй участвовать в KazHack — хакатоне для школьников! 💻'},
+  {q:['бизнес','предпринимательство','стартап'],a:'Для бизнеса рекомендую курс "Основы экономики и финансов" и программу MIT LaunchX — там создают стартапы за 4 недели. Также Enactus Kazakhstan — международный бизнес-конкурс! 🚀'},
+  {q:['стипендия','деньги','финансирование'],a:'Главная стипендия Казахстана — Болашак (для 11 класса). Также много университетов дают финансовую помощь: подавай в 8–12 университетов, чтобы получить лучшее предложение! 💰'},
+  {q:['летняя','лето','summer'],a:'Летние программы: Летняя школа Назарбаев Университет (для 9–11 кл.) и Stanford Online High School Summer. Подавай заранее — конкуренция высокая! ☀️'},
+  {q:['привет','здравствуй','hi','hello'],a:'Привет! 👋 Я AI-ассистент Mentoria. Расскажи, что тебя интересует — олимпиады, поступление, программирование или что-то другое? Помогу найти лучшие курсы и возможности!'},
+];
+
+// ═══════════════════════════════════════════════════════
+// I18N
+// ═══════════════════════════════════════════════════════
+const I18N = {
+  ru:{nav_home:'Главная',nav_catalog:'Возможности',nav_courses:'Курсы',nav_calendar:'Календарь',nav_roadmap:'Roadmap',nav_dashboard:'Кабинет',nav_admin:'Админ',nav_login:'Войти',hero_title1:'Найди возможности.',hero_title2:'Учись без границ.',hero_sub:'Mentoria Hub — единая платформа для поиска конкурсов, стипендий, программ и асинхронных курсов для учеников 8–11 классов.',btn_find_opp:'🔍 Найти возможности',btn_start_learn:'📚 Начать обучение',btn_join:'🚀 Присоединиться к Mentoria',stat_opp:'Возможностей',stat_courses:'Курсов',stat_grades:'Классы',stat_countries:'Страны',feat_title:'Всё в одном месте',feat_sub:'Mentoria Hub помогает расти академически и за пределами класса',f1t:'Конкурсы и олимпиады',f1d:'Находи и сохраняй актуальные олимпиады, хакатоны и конкурсы с дедлайнами.',f2t:'Асинхронные курсы',f2d:'Учись в своём темпе: видео-уроки, материалы и мини-тесты без живых занятий.',f3t:'Персональные рекомендации',f3d:'Платформа подбирает курсы и возможности под твои интересы и цели.',f4t:'Отслеживай прогресс',f4d:'Видь прогресс по курсам и не пропусти дедлайны в личном кабинете.',f5t:'Международные возможности',f5d:'Программы для учеников из Казахстана и других стран.',f6t:'AI-ассистент',f6d:'Задай вопрос AI — он поможет найти подходящие программы и курсы.',login_title:'Войти в аккаунт',login_sub:'Добро пожаловать в Mentoria Hub',lbl_email:'Email',lbl_pass:'Пароль',lbl_name:'Имя',lbl_grade:'Класс',lbl_interests:'Интересы',lbl_goals:'Цели',btn_login:'Войти',btn_register:'Зарегистрироваться',no_acc:'Нет аккаунта?',has_acc:'Есть аккаунт?',btn_reg_switch:'Зарегистрироваться',btn_login_switch:'Войти',reg_title:'Создать аккаунт',reg_sub:'Присоединяйся к Mentoria Hub',cat_title:'Каталог возможностей',cat_sub:'Конкурсы, стипендии, программы и многое другое',fil_category:'Направление',fil_all:'Все',fil_biz:'Бизнес',fil_res:'Исследования',fil_olymp:'Олимпиада',fil_uni:'Поступление',fil_summer:'Летняя школа',fil_vol:'Волонтёрство',fil_grade:'Класс',fil_format:'Формат',fmt_online:'Онлайн',fmt_offline:'Оффлайн',fmt_hybrid:'Гибрид',cour_title:'Курсы Mentoria',cour_sub:'Учись в своём темпе — уроки, задания и тесты',back_courses:'Назад к курсам',ds_saved:'Сохранено',ds_enrolled:'Записан на курсов',ds_completed:'Уроков завершено',ds_certs:'Сертификатов',ds_deadlines:'Ближайшие дедлайны',ds_my_courses:'Мои курсы',ds_saved_opps:'Сохранённые возможности',ds_recs:'Рекомендации',rm_title:'Roadmap 9–12 классов',rm_sub:'Что делать в каждом классе, чтобы поступить в лучший университет',adm_title:'Панель администратора',adm_sub:'Управляй курсами и возможностями',adm_tab_opps:'Возможности',adm_tab_courses:'Курсы',adm_tab_users:'Пользователи',adm_manage_opps:'Управление возможностями',adm_add_opp:'+ Добавить возможность',adm_manage_courses:'Управление курсами',adm_add_course:'+ Добавить курс',adm_users:'Пользователи',ai_greeting:'Привет! Я AI-ассистент Mentoria. Спроси меня о курсах, возможностях или о том, как подготовиться к поступлению! 🎓',goal_uni:'Поступление в университет',goal_olymp:'Победа в олимпиадах',goal_skills:'Развить навыки',goal_career:'Карьера и стажировки',Business:'Бизнес',Olympiad:'Олимпиады',Research:'Исследования',English:'Английский',University:'Поступление в вуз',Programming:'Программирование',Finance:'Финансы'},
+  en:{nav_home:'Home',nav_catalog:'Opportunities',nav_courses:'Courses',nav_calendar:'Calendar',nav_roadmap:'Roadmap',nav_dashboard:'Dashboard',nav_admin:'Admin',nav_login:'Login',hero_title1:'Find Opportunities.',hero_title2:'Learn Anywhere.',hero_sub:'Mentoria Hub — one platform for finding competitions, scholarships, programs and async courses for grades 8–11.',btn_find_opp:'🔍 Find Opportunities',btn_start_learn:'📚 Start Learning',btn_join:'🚀 Join Mentoria',stat_opp:'Opportunities',stat_courses:'Courses',stat_grades:'Grades',stat_countries:'Countries',feat_title:'Everything in One Place',feat_sub:'Mentoria Hub helps you grow academically and beyond the classroom',f1t:'Competitions & Olympiads',f1d:'Find and save current olympiads, hackathons and contests with deadlines.',f2t:'Async Courses',f2d:'Learn at your own pace: video lessons, materials and mini-quizzes.',f3t:'Personal Recommendations',f3d:'The platform picks courses and opportunities based on your interests.',f4t:'Track Progress',f4d:'See your course progress and never miss deadlines in your dashboard.',f5t:'International Opportunities',f5d:'Programs for students from Kazakhstan and other countries.',f6t:'AI Assistant',f6d:'Ask AI — it will help you find the right programs and courses.',login_title:'Sign In',login_sub:'Welcome to Mentoria Hub',lbl_email:'Email',lbl_pass:'Password',lbl_name:'Name',lbl_grade:'Grade',lbl_interests:'Interests',lbl_goals:'Goals',btn_login:'Sign In',btn_register:'Register',no_acc:"Don't have an account?",has_acc:'Have an account?',btn_reg_switch:'Register',btn_login_switch:'Sign In',reg_title:'Create Account',reg_sub:'Join Mentoria Hub',cat_title:'Opportunity Catalog',cat_sub:'Competitions, scholarships, programs and more',fil_category:'Category',fil_all:'All',fil_biz:'Business',fil_res:'Research',fil_olymp:'Olympiad',fil_uni:'University',fil_summer:'Summer School',fil_vol:'Volunteering',fil_grade:'Grade',fil_format:'Format',fmt_online:'Online',fmt_offline:'Offline',fmt_hybrid:'Hybrid',cour_title:'Mentoria Courses',cour_sub:'Learn at your own pace — lessons, tasks and quizzes',back_courses:'Back to Courses',ds_saved:'Saved',ds_enrolled:'Enrolled in',ds_completed:'Lessons Done',ds_certs:'Certificates',ds_deadlines:'Upcoming Deadlines',ds_my_courses:'My Courses',ds_saved_opps:'Saved Opportunities',ds_recs:'Recommendations',rm_title:'Roadmap Grades 9–12',rm_sub:'What to do each year to get into a top university',adm_title:'Admin Panel',adm_sub:'Manage courses and opportunities',adm_tab_opps:'Opportunities',adm_tab_courses:'Courses',adm_tab_users:'Users',adm_manage_opps:'Manage Opportunities',adm_add_opp:'+ Add Opportunity',adm_manage_courses:'Manage Courses',adm_add_course:'+ Add Course',adm_users:'Users',ai_greeting:'Hi! I am the Mentoria AI assistant. Ask me about courses, opportunities or how to prepare for university! 🎓',goal_uni:'University Admission',goal_olymp:'Win Olympiads',goal_skills:'Develop Skills',goal_career:'Career & Internships',Business:'Business',Olympiad:'Olympiads',Research:'Research',English:'English',University:'University Admission',Programming:'Programming',Finance:'Finance'},
+  kk:{nav_home:'Басты бет',nav_catalog:'Мүмкіндіктер',nav_courses:'Курстар',nav_calendar:'Күнтізбе',nav_roadmap:'Roadmap',nav_dashboard:'Кабинет',nav_admin:'Әкімші',nav_login:'Кіру',hero_title1:'Мүмкіндіктер тап.',hero_title2:'Шектеусіз оқы.',hero_sub:'Mentoria Hub — 8–11 сынып оқушыларына арналған байқаулар, стипендиялар, бағдарламалар мен асинхронды курстарды іздеуге арналған бірыңғай платформа.',btn_find_opp:'🔍 Мүмкіндіктер тап',btn_start_learn:'📚 Оқуды бастау',btn_join:'🚀 Mentoria-ға қосылу',stat_opp:'Мүмкіндіктер',stat_courses:'Курстар',stat_grades:'Сыныптар',stat_countries:'Елдер',feat_title:'Бәрі бір жерде',feat_sub:'Mentoria Hub академиялық және сыныптан тыс өсуге көмектеседі',f1t:'Байқаулар мен олимпиадалар',f1d:'Өзекті олимпиадаларды, хакатондар мен байқауларды тауып, сақта.',f2t:'Асинхронды курстар',f2d:'Өз қарқынмен оқы: бейне сабақтар, материалдар және мини-тесттер.',f3t:'Жеке ұсыныстар',f3d:'Платформа қызығушылықтарыңа сай курстар мен мүмкіндіктер ұсынады.',f4t:'Прогресті бақыла',f4d:'Курстар бойынша прогресті көр және мерзімдерді жіберіп алма.',f5t:'Халықаралық мүмкіндіктер',f5d:'Қазақстан мен басқа елдердің оқушыларына арналған бағдарламалар.',f6t:'AI-көмекші',f6d:'AI-дан сұра — ол сәйкес бағдарламалар мен курстар табуға көмектеседі.',login_title:'Аккаунтқа кіру',login_sub:'Mentoria Hub-ке қош келдіңіз',lbl_email:'Email',lbl_pass:'Құпия сөз',lbl_name:'Аты',lbl_grade:'Сынып',lbl_interests:'Қызығушылықтар',lbl_goals:'Мақсаттар',btn_login:'Кіру',btn_register:'Тіркелу',no_acc:'Аккаунт жоқ па?',has_acc:'Аккаунт бар ма?',btn_reg_switch:'Тіркелу',btn_login_switch:'Кіру',reg_title:'Аккаунт жасау',reg_sub:'Mentoria Hub-ке қосыл',cat_title:'Мүмкіндіктер каталогы',cat_sub:'Байқаулар, стипендиялар, бағдарламалар және тағы басқа',fil_category:'Бағыт',fil_all:'Барлығы',fil_biz:'Бизнес',fil_res:'Зерттеу',fil_olymp:'Олимпиада',fil_uni:'Оқуға түсу',fil_summer:'Жазғы мектеп',fil_vol:'Волонтерлік',fil_grade:'Сынып',fil_format:'Формат',fmt_online:'Онлайн',fmt_offline:'Офлайн',fmt_hybrid:'Аралас',cour_title:'Mentoria курстары',cour_sub:'Өз қарқынмен оқы — сабақтар, тапсырмалар және тесттер',back_courses:'Курстарға оралу',ds_saved:'Сақталған',ds_enrolled:'Тіркелген курстар',ds_completed:'Аяқталған сабақтар',ds_certs:'Сертификаттар',ds_deadlines:'Жақындаған мерзімдер',ds_my_courses:'Менің курстарым',ds_saved_opps:'Сақталған мүмкіндіктер',ds_recs:'Ұсыныстар',rm_title:'9–12 сынып Roadmap',rm_sub:'Үздік университетке түсу үшін әр сыныпта не жасау керек',adm_title:'Әкімші панелі',adm_sub:'Курстар мен мүмкіндіктерді басқар',adm_tab_opps:'Мүмкіндіктер',adm_tab_courses:'Курстар',adm_tab_users:'Пайдаланушылар',adm_manage_opps:'Мүмкіндіктерді басқару',adm_add_opp:'+ Мүмкіндік қосу',adm_manage_courses:'Курстарды басқару',adm_add_course:'+ Курс қосу',adm_users:'Пайдаланушылар',ai_greeting:'Сәлем! Мен Mentoria AI-көмекшісімін. Курстар, мүмкіндіктер немесе университетке қабылдануға дайындалу туралы сұра! 🎓',goal_uni:'Университетке түсу',goal_olymp:'Олимпиадада жеңу',goal_skills:'Дағдыларды дамыту',goal_career:'Мансап және тәжірибе',Business:'Бизнес',Olympiad:'Олимпиадалар',Research:'Зерттеу',English:'Ағылшын тілі',University:'Оқуға түсу',Programming:'Бағдарламалау',Finance:'Қаржы'},
+};
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+let currentLang = localStorage.getItem('mh_lang') || 'ru';
+let isDark = localStorage.getItem('mh_theme') !== 'light';
+let currentUser = null;
+let currentPage = 'home';
+let currentCourse = null;
+let currentLesson = 0;
+let calDate = new Date();
+
+function getUsers(){return JSON.parse(localStorage.getItem('mh_users')||'[]')}
+function saveUsers(u){localStorage.setItem('mh_users',JSON.stringify(u))}
+function getOpps(){return JSON.parse(localStorage.getItem('mh_opps')||JSON.stringify(DEFAULT_OPPS))}
+function saveOpps(o){localStorage.setItem('mh_opps',JSON.stringify(o))}
+function getCourses(){return JSON.parse(localStorage.getItem('mh_courses')||JSON.stringify(DEFAULT_COURSES))}
+function saveCourses(c){localStorage.setItem('mh_courses',JSON.stringify(c))}
+function getUserData(uid){return JSON.parse(localStorage.getItem('mh_ud_'+uid)||'{}')}
+function saveUserData(uid,d){localStorage.setItem('mh_ud_'+uid,JSON.stringify(d))}
+
+// ═══════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════
+window.onload=function(){
+  if(!localStorage.getItem('mh_opps')) saveOpps(DEFAULT_OPPS);
+  if(!localStorage.getItem('mh_courses')) saveCourses(DEFAULT_COURSES);
+  // check admin user exists
+  let users=getUsers();
+  if(!users.find(u=>u.email==='admin@mentoria.kz')){
+    users.push({id:'admin',name:'Admin',email:'admin@mentoria.kz',password:'admin123',grade:'',interests:[],goal:'',isAdmin:true});
+    saveUsers(users);
+  }
+  applyTheme();
+  applyLang();
+  setupInterestChips();
+  renderRoadmap();
+  renderOpps();
+  renderCourses();
+  renderCalendar();
+};
+
+// ═══════════════════════════════════════════════════════
+// THEME
+// ═══════════════════════════════════════════════════════
+function applyTheme(){
+  document.body.classList.toggle('light',!isDark);
+  document.querySelector('[onclick="toggleTheme()"]').textContent = isDark?'🌙':'☀️';
+}
+function toggleTheme(){
+  isDark=!isDark;
+  localStorage.setItem('mh_theme',isDark?'dark':'light');
+  applyTheme();
+}
+
+// ═══════════════════════════════════════════════════════
+// I18N
+// ═══════════════════════════════════════════════════════
+function t(k){return (I18N[currentLang]||I18N.ru)[k]||I18N.ru[k]||k}
+function applyLang(){
+  document.getElementById('langSel').value=currentLang;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    el.textContent=t(el.dataset.i18n);
+  });
+  document.querySelectorAll('[data-i18n-chip]').forEach(el=>{
+    el.textContent=t(el.dataset.i18nChip)||el.dataset.val;
+  });
+  // update ai greeting
+  const msgs=document.querySelectorAll('#aiMsgs .ai-msg.bot');
+  if(msgs.length===1) msgs[0].textContent=t('ai_greeting');
+}
+function changeLang(l){
+  currentLang=l;
+  localStorage.setItem('mh_lang',l);
+  applyLang();
+  renderOpps();
+  renderCourses();
+  renderRoadmap();
+  renderCalendar();
+  if(currentUser) renderDashboard();
+}
+
+// ═══════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════
+function showPage(p){
+  if((p==='dashboard'||p==='admin')&&!currentUser){showPage('auth');return;}
+  if(p==='admin'&&!currentUser?.isAdmin){showToast('⚠️ Нет доступа');return;}
+  document.querySelectorAll('.page').forEach(el=>el.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(btn=>btn.classList.toggle('active',btn.dataset.page===p));
+  currentPage=p;
+  if(p==='dashboard') renderDashboard();
+  if(p==='admin') renderAdmin();
+  if(p==='catalog') renderOpps();
+  if(p==='courses') renderCourses();
+  if(p==='calendar') renderCalendar();
+  window.scrollTo(0,0);
+}
+
+// ═══════════════════════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════════════════════
+function setupInterestChips(){
+  document.querySelectorAll('#interestChips .chip').forEach(c=>{
+    c.onclick=()=>c.classList.toggle('selected');
+  });
+}
+function toggleAuth(mode){
+  document.getElementById('loginCard').classList.toggle('hidden',mode==='register');
+  document.getElementById('registerCard').classList.toggle('hidden',mode==='login');
+}
+function doLogin(){
+  const email=document.getElementById('loginEmail').value.trim();
+  const pass=document.getElementById('loginPass').value;
+  const users=getUsers();
+  const user=users.find(u=>u.email===email&&u.password===pass);
+  if(!user){document.getElementById('loginErr').textContent='Неверный email или пароль';document.getElementById('loginErr').classList.remove('hidden');return;}
+  loginUser(user);
+}
+function doRegister(){
+  const name=document.getElementById('regName').value.trim();
+  const email=document.getElementById('regEmail').value.trim();
+  const pass=document.getElementById('regPass').value;
+  const grade=document.getElementById('regGrade').value;
+  const goal=document.getElementById('regGoal').value;
+  const interests=[...document.querySelectorAll('#interestChips .chip.selected')].map(c=>c.dataset.val);
+  if(!name||!email||!pass){document.getElementById('regErr').textContent='Заполни все поля';document.getElementById('regErr').classList.remove('hidden');return;}
+  const users=getUsers();
+  if(users.find(u=>u.email===email)){document.getElementById('regErr').textContent='Email уже зарегистрирован';document.getElementById('regErr').classList.remove('hidden');return;}
+  const user={id:'u'+Date.now(),name,email,password:pass,grade,interests,goal,isAdmin:false};
+  users.push(user);
+  saveUsers(users);
+  loginUser(user);
+}
+function loginUser(user){
+  currentUser=user;
+  localStorage.setItem('mh_session',user.id);
+  document.getElementById('authNavBtn').textContent=user.name.split(' ')[0];
+  document.getElementById('authNavBtn').onclick=()=>showPage('dashboard');
+  document.getElementById('adminNav').style.display=user.isAdmin?'':'none';
+  showToast('👋 Добро пожаловать, '+user.name+'!');
+  showPage('home');
+}
+function autoLogin(){
+  const sid=localStorage.getItem('mh_session');
+  if(sid){const u=getUsers().find(u=>u.id===sid);if(u) loginUser(u);}
+}
+
+// ═══════════════════════════════════════════════════════
+// OPPORTUNITIES
+// ═══════════════════════════════════════════════════════
+function filterOpps(){renderOpps();}
+function badgeClass(cat){
+  const m={STEM:'badge-stem',Business:'badge-business',Research:'badge-research',University:'badge-uni',Olympiad:'badge-olympiad',Volunteer:'badge-volunteer',Summer:'badge-summer'};
+  return m[cat]||'badge-stem';
+}
+function daysLeft(dl){
+  const d=new Date(dl)-new Date();
+  const days=Math.ceil(d/86400000);
+  if(days<0) return '⛔ Закрыт';
+  if(days===0) return '🔴 Сегодня';
+  if(days<=7) return '🔴 '+days+'д.';
+  if(days<=30) return '🟡 '+days+'д.';
+  return '🟢 '+days+'д.';
+}
+function renderOpps(arr=null){
+  const opps=arr||getFilteredOpps();
+  const grid=document.getElementById('oppGrid');
+  if(!grid) return;
+  if(!opps.length){grid.innerHTML='<div class="no-results">Ничего не найдено 🔍</div>';return;}
+  const ud=currentUser?getUserData(currentUser.id):{};
+  const saved=ud.saved||[];
+  const recs=currentUser?getRecommendedIds():[]; 
+  grid.innerHTML=opps.map(o=>`
+    <div class="opp-card" id="ocard-${o.id}">
+      <span class="opp-badge ${badgeClass(o.category)}">${o.emoji||'📌'} ${o.category}</span>
+      ${recs.includes(o.id)?'<span class="tag-recommend">✨ Рекомендовано</span>':''}
+      <div class="opp-title">${o.name}</div>
+      <div class="opp-desc">${o.desc}</div>
+      <div class="opp-meta">
+        <span>📅 ${daysLeft(o.deadline)}</span>
+        <span>📡 ${o.format}</span>
+        ${o.grades?`<span>🎒 ${o.grades.join(',')} кл.</span>`:''}
+      </div>
+      <div class="opp-actions">
+        <button class="btn-sm btn-apply" onclick="applyOpp('${o.id}')" data-i18n="btn_apply">Подать заявку</button>
+        <button class="btn-sm btn-save ${saved.includes(o.id)?'saved':''}" onclick="toggleSave('${o.id}')" id="savebtn-${o.id}">
+          ${saved.includes(o.id)?'⭐ Сохранено':'☆ Сохранить'}
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+function getFilteredOpps(){
+  const q=document.getElementById('searchInput')?.value.toLowerCase()||'';
+  const cat=document.getElementById('filterCat')?.value||'';
+  const grade=document.getElementById('filterGrade')?.value||'';
+  const fmt=document.getElementById('filterFormat')?.value||'';
+  return getOpps().filter(o=>{
+    if(q&&!o.name.toLowerCase().includes(q)&&!o.desc.toLowerCase().includes(q)) return false;
+    if(cat&&o.category!==cat) return false;
+    if(grade&&o.grades&&!o.grades.includes(+grade)) return false;
+    if(fmt&&o.format!==fmt) return false;
+    return true;
+  });
+}
+function getRecommendedIds(){
+  if(!currentUser) return [];
+  const interests=currentUser.interests||[];
+  const catMap={STEM:['STEM','Olympiad'],Business:['Business'],Research:['Research'],University:['University'],English:['Summer'],Programming:['STEM']};
+  const cats=new Set();
+  interests.forEach(i=>(catMap[i]||[]).forEach(c=>cats.add(c)));
+  return getOpps().filter(o=>cats.has(o.category)).map(o=>o.id);
+}
+function applyOpp(id){
+  const o=getOpps().find(o=>o.id===id);
+  if(o?.link) window.open(o.link,'_blank');
+  showToast('🚀 Переходим на страницу подачи!');
+}
+function toggleSave(id){
+  if(!currentUser){showPage('auth');return;}
+  const ud=getUserData(currentUser.id);
+  ud.saved=ud.saved||[];
+  if(ud.saved.includes(id)){
+    ud.saved=ud.saved.filter(x=>x!==id);
+    showToast('Удалено из избранного');
+  } else {
+    ud.saved.push(id);
+    showToast('⭐ Добавлено в избранное!');
+  }
+  saveUserData(currentUser.id,ud);
+  const btn=document.getElementById('savebtn-'+id);
+  if(btn){btn.classList.toggle('saved',ud.saved.includes(id));btn.textContent=ud.saved.includes(id)?'⭐ Сохранено':'☆ Сохранить';}
+}
+
+// ═══════════════════════════════════════════════════════
+// COURSES
+// ═══════════════════════════════════════════════════════
+function renderCourses(target='coursesGrid'){
+  const grid=document.getElementById(target);
+  if(!grid) return;
+  const courses=getCourses();
+  const ud=currentUser?getUserData(currentUser.id):{};
+  const enrolled=ud.enrolled||{};
+  grid.innerHTML=courses.map(c=>{
+    const prog=enrolled[c.id]||{done:[]};
+    const pct=c.lessons?Math.round(prog.done.length/c.lessons.length*100):0;
+    const isEnrolled=!!enrolled[c.id];
+    return `
+    <div class="course-card" onclick="openCourse('${c.id}')">
+      <div class="course-banner" style="background:${c.color||'linear-gradient(135deg,var(--accent),var(--accent2))'}">${c.emoji||'📖'}</div>
+      <div class="course-body">
+        <div class="course-level">${c.level||'Beginner'}</div>
+        <div class="course-title">${c.name}</div>
+        <div class="course-desc">${c.desc}</div>
+        <div class="course-meta">
+          <span>📚 ${c.lessons?c.lessons.length:0} уроков</span>
+          <span>🏷️ ${c.category}</span>
+        </div>
+        ${isEnrolled?`<div class="progress-bar-wrap"><label><span>Прогресс</span><span>${pct}%</span></label><div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div></div>`:''}
+        <button class="btn-enroll ${isEnrolled?'btn-continue':''}" onclick="event.stopPropagation();openCourse('${c.id}')">
+          ${isEnrolled?(pct===100?'🏆 Просмотреть':'▶ Продолжить'):'Начать курс'}
+        </button>
+      </div>
+    </div>`}).join('');
+}
+function openCourse(id){
+  const course=getCourses().find(c=>c.id===id);
+  if(!course) return;
+  if(!currentUser){showPage('auth');return;}
+  currentCourse=course;
+  const ud=getUserData(currentUser.id);
+  ud.enrolled=ud.enrolled||{};
+  if(!ud.enrolled[id]) ud.enrolled[id]={done:[]};
+  saveUserData(currentUser.id,ud);
+  renderCourseDetail(course);
+  showPage('course-detail');
+}
+function renderCourseDetail(course){
+  const ud=getUserData(currentUser.id);
+  const prog=ud.enrolled?.[course.id]||{done:[]};
+  const pct=course.lessons?Math.round(prog.done.length/course.lessons.length*100):0;
+  currentLesson=prog.lastLesson||0;
+  const lessonList=course.lessons?course.lessons.map((l,i)=>`
+    <div class="lesson-item ${i===currentLesson?'active':''} ${prog.done.includes(l.id)?'done':''}" onclick="selectLesson(${i})">
+      <div class="lesson-icon">${prog.done.includes(l.id)?'✓':(i+1)}</div>
+      <div class="lesson-info">
+        <div class="lesson-title-text">${l.title}</div>
+        <div class="lesson-dur">⏱ ${l.duration}</div>
+      </div>
+    </div>`).join(''):'';
+  document.getElementById('courseDetailContent').innerHTML=`
+    <div class="course-detail-header">
+      <div style="font-size:2rem;margin-bottom:8px">${course.emoji||'📖'}</div>
+      <h2 style="font-size:1.4rem;font-weight:800;margin-bottom:6px">${course.name}</h2>
+      <p style="color:var(--text2);font-size:.9rem;margin-bottom:14px">${course.desc}</p>
+      <div class="progress-bar-wrap"><label><span>Общий прогресс</span><span>${pct}%</span></label><div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div></div>
+    </div>
+    <h3 style="font-weight:700;margin-bottom:12px">📋 Уроки</h3>
+    <div class="lesson-list">${lessonList}</div>
+    <div id="lessonContent"></div>
+  `;
+  renderLesson(currentLesson);
+}
+function selectLesson(i){
+  currentLesson=i;
+  document.querySelectorAll('.lesson-item').forEach((el,j)=>{
+    el.classList.toggle('active',j===i);
+  });
+  renderLesson(i);
+}
+function renderLesson(i){
+  if(!currentCourse||!currentCourse.lessons) return;
+  const l=currentCourse.lessons[i];
+  const ud=getUserData(currentUser.id);
+  const prog=ud.enrolled?.[currentCourse.id]||{done:[]};
+  const isDone=prog.done.includes(l.id);
+  document.getElementById('lessonContent').innerHTML=`
+    <div class="lesson-content-box">
+      <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:16px">${l.title}</h3>
+      <div class="video-placeholder" onclick="showToast('▶ Видео запустилось бы в реальной версии!')">
+        <div class="play-btn">▶</div>
+        <div style="color:var(--text3);font-size:.85rem">Нажми для просмотра урока</div>
+      </div>
+      <p style="font-size:.9rem;line-height:1.7;color:var(--text2);margin-bottom:20px">${l.content}</p>
+      ${l.quiz?renderQuiz(l,isDone):''}
+      ${!isDone?`<button class="btn-full" style="margin-top:16px" onclick="completeLesson('${l.id}')">✅ Отметить как выполненный</button>`:'<div style="text-align:center;color:var(--green);font-weight:700;margin-top:12px">✅ Урок завершён!</div>'}
+      ${i<currentCourse.lessons.length-1?`<button class="btn-sm btn-apply" style="margin-top:10px" onclick="selectLesson(${i+1})">Следующий урок →</button>`:''}
+    </div>
+  `;
+}
+function renderQuiz(l,isDone){
+  if(!l.quiz) return '';
+  return `<div class="quiz-box">
+    <h4>📝 Мини-тест: ${l.quiz.q}</h4>
+    ${l.quiz.opts.map((opt,i)=>`
+      <div class="quiz-opt ${isDone&&i===l.quiz.correct?'correct':''}" onclick="checkQuiz(this,${i},${l.quiz.correct})">
+        <input type="radio" name="quiz_${l.id}" ${isDone&&i===l.quiz.correct?'checked':''}/>
+        ${opt}
+      </div>`).join('')}
+    <div id="quizFeedback" style="font-size:.85rem;margin-top:8px"></div>
+  </div>`;
+}
+function checkQuiz(el,selected,correct){
+  document.querySelectorAll('.quiz-opt').forEach((o,i)=>{
+    o.classList.remove('selected','correct','wrong');
+    if(i===correct) o.classList.add('correct');
+    else if(i===selected&&selected!==correct) o.classList.add('wrong');
+  });
+  const fb=document.getElementById('quizFeedback');
+  if(fb) fb.textContent=selected===correct?'✅ Правильно!':'❌ Неверно, попробуй ещё раз.';
+  fb.style.color=selected===correct?'var(--green)':'var(--red)';
+}
+function completeLesson(lid){
+  const ud=getUserData(currentUser.id);
+  ud.enrolled=ud.enrolled||{};
+  ud.enrolled[currentCourse.id]=ud.enrolled[currentCourse.id]||{done:[]};
+  if(!ud.enrolled[currentCourse.id].done.includes(lid)){
+    ud.enrolled[currentCourse.id].done.push(lid);
+  }
+  ud.enrolled[currentCourse.id].lastLesson=currentLesson;
+  saveUserData(currentUser.id,ud);
+  showToast('✅ Урок завершён!');
+  // check if all done
+  const total=currentCourse.lessons.length;
+  if(ud.enrolled[currentCourse.id].done.length>=total) {
+    ud.certs=ud.certs||[];
+    if(!ud.certs.includes(currentCourse.id)){
+      ud.certs.push(currentCourse.id);
+      saveUserData(currentUser.id,ud);
+      showCert(currentCourse);
+    }
+  }
+  saveUserData(currentUser.id,ud);
+  renderCourseDetail(currentCourse);
+}
+function showCert(course){
+  document.getElementById('certName').textContent=currentUser.name;
+  document.getElementById('certCourse').textContent=course.name;
+  document.getElementById('certDate').textContent='Выдан: '+new Date().toLocaleDateString('ru-RU');
+  document.getElementById('certOverlay').classList.add('open');
+}
+function closeCert(){document.getElementById('certOverlay').classList.remove('open');}
+
+// ═══════════════════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════════════════
+function renderDashboard(){
+  if(!currentUser) return;
+  const ud=getUserData(currentUser.id);
+  const saved=(ud.saved||[]);
+  const enrolled=ud.enrolled||{};
+  const certs=ud.certs||[];
+  const totalDone=Object.values(enrolled).reduce((a,v)=>a+(v.done?.length||0),0);
+  document.getElementById('dashWelcome').textContent='👋 Привет, '+currentUser.name+'!';
+  document.getElementById('dsSaved').textContent=saved.length;
+  document.getElementById('dsEnrolled').textContent=Object.keys(enrolled).length;
+  document.getElementById('dsCompleted').textContent=totalDone;
+  document.getElementById('dsCerts').textContent=certs.length;
+  // deadlines
+  const opps=getOpps();
+  const savedOpps=opps.filter(o=>saved.includes(o.id)).sort((a,b)=>new Date(a.deadline)-new Date(b.deadline));
+  const dl=document.getElementById('deadlineList');
+  dl.innerHTML=savedOpps.slice(0,5).map(o=>{
+    const days=Math.ceil((new Date(o.deadline)-new Date())/86400000);
+    return `<div class="deadline-item"><div class="deadline-dot ${days<=7?'urgent':''}"></div><div class="deadline-info"><div class="deadline-name">${o.name}</div><div class="deadline-date">${new Date(o.deadline).toLocaleDateString('ru-RU')} · ${daysLeft(o.deadline)}</div></div></div>`;
+  }).join('')||'<div style="color:var(--text3);font-size:.9rem">Сохрани возможности, чтобы видеть дедлайны</div>';
+  // my courses
+  const enrolledCourses=getCourses().filter(c=>enrolled[c.id]);
+  const dc=document.getElementById('dashCourseList');
+  if(dc){dc.innerHTML='';enrolledCourses.forEach(c=>{dc.innerHTML+='<div></div>';});renderCourses('dashCourseList');}
+  // filter enrolled only
+  const dcEl=document.getElementById('dashCourseList');
+  if(dcEl){
+    const allCards=dcEl.querySelectorAll('.course-card');
+    getCourses().forEach((c,i)=>{if(!enrolled[c.id]&&allCards[i]) allCards[i].style.display='none';});
+  }
+  // saved opps
+  const sg=document.getElementById('savedOppList');
+  sg.innerHTML=savedOpps.map(o=>`
+    <div class="saved-card">
+      <button class="unsave-btn" onclick="toggleSave('${o.id}');renderDashboard()">✕</button>
+      <div class="saved-card-title">${o.emoji||'📌'} ${o.name}</div>
+      <div class="saved-card-meta">${o.category} · ${new Date(o.deadline).toLocaleDateString('ru-RU')}</div>
+    </div>`).join('')||'<div style="color:var(--text3);font-size:.9rem">Нет сохранённых возможностей</div>';
+  // recs
+  const recIds=getRecommendedIds();
+  const recOpps=opps.filter(o=>recIds.includes(o.id)&&!saved.includes(o.id)).slice(0,4);
+  renderOpps(recOpps.length?recOpps:opps.slice(0,4));
+  // fix: render recs in dash
+  const dashRecs=document.getElementById('dashRecs');
+  if(dashRecs){
+    const recsToShow=recOpps.length?recOpps:opps.slice(0,4);
+    const ud2=getUserData(currentUser.id);
+    const saved2=ud2.saved||[];
+    dashRecs.innerHTML=recsToShow.map(o=>`
+      <div class="opp-card">
+        <span class="opp-badge ${badgeClass(o.category)}">${o.emoji||'📌'} ${o.category}</span>
+        <div class="opp-title">${o.name}</div>
+        <div class="opp-desc">${o.desc}</div>
+        <div class="opp-meta"><span>📅 ${daysLeft(o.deadline)}</span><span>📡 ${o.format}</span></div>
+        <div class="opp-actions">
+          <button class="btn-sm btn-apply" onclick="applyOpp('${o.id}')">Подать заявку</button>
+          <button class="btn-sm btn-save ${saved2.includes(o.id)?'saved':''}" onclick="toggleSave('${o.id}');renderDashboard()">${saved2.includes(o.id)?'⭐ Сохранено':'☆ Сохранить'}</button>
+        </div>
+      </div>`).join('');
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// CALENDAR
+// ═══════════════════════════════════════════════════════
+const MONTHS_RU=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+const DAYS_RU=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+function changeMonth(d){calDate=new Date(calDate.getFullYear(),calDate.getMonth()+d,1);renderCalendar();}
+function renderCalendar(){
+  const y=calDate.getFullYear(),m=calDate.getMonth();
+  document.getElementById('calTitle').textContent=MONTHS_RU[m]+' '+y;
+  const opps=getOpps();
+  const deadlineMap={};
+  opps.forEach(o=>{const d=o.deadline;if(d)deadlineMap[d]=(deadlineMap[d]||[]).concat(o.name);});
+  const ud=currentUser?getUserData(currentUser.id):{};
+  const savedIds=ud.saved||[];
+  const savedDeadlines={};
+  opps.filter(o=>savedIds.includes(o.id)).forEach(o=>{savedDeadlines[o.deadline]=(savedDeadlines[o.deadline]||[]).concat(o.name);});
+  const grid=document.getElementById('calGrid');
+  const firstDay=(new Date(y,m,1).getDay()+6)%7;
+  const daysInMonth=new Date(y,m+1,0).getDate();
+  const today=new Date();
+  let html=DAYS_RU.map(d=>`<div class="cal-day-name">${d}</div>`).join('');
+  for(let i=0;i<firstDay;i++) html+=`<div class="cal-day other-month"></div>`;
+  for(let d=1;d<=daysInMonth;d++){
+    const dateStr=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isToday=today.getDate()===d&&today.getMonth()===m&&today.getFullYear()===y;
+    const events=deadlineMap[dateStr]||[];
+    const savedEvs=savedDeadlines[dateStr]||[];
+    html+=`<div class="cal-day ${isToday?'today':''}">
+      <span style="font-size:.75rem;font-weight:600">${d}</span>
+      ${savedEvs.map(e=>`<div class="cal-event deadline" title="${e}">${e.slice(0,12)}…</div>`).join('')}
+      ${events.filter(e=>!savedEvs.includes(e)).map(e=>`<div class="cal-event" title="${e}">${e.slice(0,10)}…</div>`).join('')}
+    </div>`;
+  }
+  grid.innerHTML=html;
+}
+
+// ═══════════════════════════════════════════════════════
+// ROADMAP
+// ═══════════════════════════════════════════════════════
+function renderRoadmap(){
+  const el=document.getElementById('roadmapContent');
+  if(!el) return;
+  el.innerHTML=ROADMAP_DATA.map(rm=>`
+    <div class="rm-grade">
+      <div class="rm-grade-header"><div class="rm-grade-num">${rm.grade}</div><div class="rm-grade-title">${rm.grade} класс</div></div>
+      <div class="rm-items">${rm.items.map(item=>`<div class="rm-item"><div class="rm-bullet">▸</div><div class="rm-text">${item}</div></div>`).join('')}</div>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════════════════════
+// ADMIN
+// ═══════════════════════════════════════════════════════
+let currentAdminTab='opps';
+function switchAdminTab(tab){
+  currentAdminTab=tab;
+  document.querySelectorAll('.admin-tab').forEach((t,i)=>t.classList.toggle('active',['opps','courses','users'][i]===tab));
+  document.getElementById('adminOppsPanel').classList.toggle('hidden',tab!=='opps');
+  document.getElementById('adminCoursesPanel').classList.toggle('hidden',tab!=='courses');
+  document.getElementById('adminUsersPanel').classList.toggle('hidden',tab!=='users');
+  renderAdmin();
+}
+function renderAdmin(){
+  // opps
+  const aol=document.getElementById('adminOppList');
+  if(aol) aol.innerHTML=getOpps().map(o=>`
+    <div class="admin-item">
+      <span style="font-size:1.2rem">${o.emoji||'📌'}</span>
+      <div class="admin-item-title">${o.name} <span style="font-size:.75rem;color:var(--text3)">(${o.category})</span></div>
+      <div class="admin-item-actions">
+        <button class="btn-edit" onclick="openOppModal('${o.id}')">✏️</button>
+        <button class="btn-delete" onclick="deleteOpp('${o.id}')">🗑</button>
+      </div>
+    </div>`).join('');
+  // courses
+  const acl=document.getElementById('adminCourseList');
+  if(acl) acl.innerHTML=getCourses().map(c=>`
+    <div class="admin-item">
+      <span style="font-size:1.2rem">${c.emoji||'📖'}</span>
+      <div class="admin-item-title">${c.name} <span style="font-size:.75rem;color:var(--text3)">(${c.level})</span></div>
+      <div class="admin-item-actions">
+        <button class="btn-edit" onclick="openCourseModal('${c.id}')">✏️</button>
+        <button class="btn-delete" onclick="deleteCourse('${c.id}')">🗑</button>
+      </div>
+    </div>`).join('');
+  // users
+  const aul=document.getElementById('adminUserList');
+  if(aul) aul.innerHTML=getUsers().filter(u=>!u.isAdmin).map(u=>`
+    <div class="admin-item">
+      <span style="font-size:1.2rem">👤</span>
+      <div class="admin-item-title">${u.name} <span style="font-size:.75rem;color:var(--text3)">(${u.email} · ${u.grade} кл.)</span></div>
+      <div style="font-size:.75rem;color:var(--text3)">${(u.interests||[]).join(', ')}</div>
+    </div>`).join('');
+}
+function openOppModal(id){
+  const opps=getOpps();
+  const o=id?opps.find(x=>x.id===id):null;
+  document.getElementById('oppModalTitle').textContent=o?'Редактировать возможность':'Добавить возможность';
+  document.getElementById('editOppId').value=id||'';
+  document.getElementById('mOppName').value=o?.name||'';
+  document.getElementById('mOppDesc').value=o?.desc||'';
+  document.getElementById('mOppCat').value=o?.category||'STEM';
+  document.getElementById('mOppDeadline').value=o?.deadline||'';
+  document.getElementById('mOppFormat').value=o?.format||'Online';
+  document.getElementById('mOppGrades').value=o?.grades?.join(',')||'8,9,10,11';
+  document.getElementById('mOppLink').value=o?.link||'';
+  document.getElementById('oppModal').classList.add('open');
+}
+function saveOpp(){
+  const id=document.getElementById('editOppId').value;
+  const opp={
+    id:id||'o'+Date.now(),
+    name:document.getElementById('mOppName').value,
+    desc:document.getElementById('mOppDesc').value,
+    category:document.getElementById('mOppCat').value,
+    deadline:document.getElementById('mOppDeadline').value,
+    format:document.getElementById('mOppFormat').value,
+    grades:document.getElementById('mOppGrades').value.split(',').map(Number).filter(Boolean),
+    link:document.getElementById('mOppLink').value,
+    emoji:'📌',
+  };
+  const opps=getOpps();
+  if(id){const idx=opps.findIndex(o=>o.id===id);if(idx>=0)opps[idx]=opp;}
+  else opps.push(opp);
+  saveOpps(opps);
+  closeModal('oppModal');
+  renderAdmin();
+  showToast('✅ Сохранено!');
+}
+function deleteOpp(id){
+  if(!confirm('Удалить?')) return;
+  saveOpps(getOpps().filter(o=>o.id!==id));
+  renderAdmin();
+  showToast('🗑 Удалено');
+}
+function openCourseModal(id){
+  const courses=getCourses();
+  const c=id?courses.find(x=>x.id===id):null;
+  document.getElementById('courseModalTitle').textContent=c?'Редактировать курс':'Добавить курс';
+  document.getElementById('editCourseId').value=id||'';
+  document.getElementById('mCourseName').value=c?.name||'';
+  document.getElementById('mCourseDesc').value=c?.desc||'';
+  document.getElementById('mCourseLevel').value=c?.level||'Beginner';
+  document.getElementById('mCourseCat').value=c?.category||'STEM';
+  document.getElementById('mCourseEmoji').value=c?.emoji||'📖';
+  document.getElementById('courseModal').classList.add('open');
+}
+function saveCourse(){
+  const id=document.getElementById('editCourseId').value;
+  const courses=getCourses();
+  const existing=id?courses.find(c=>c.id===id):null;
+  const course={
+    ...(existing||{}),
+    id:id||'c'+Date.now(),
+    name:document.getElementById('mCourseName').value,
+    desc:document.getElementById('mCourseDesc').value,
+    level:document.getElementById('mCourseLevel').value,
+    category:document.getElementById('mCourseCat').value,
+    emoji:document.getElementById('mCourseEmoji').value||'📖',
+    color:existing?.color||'linear-gradient(135deg,var(--accent),var(--accent2))',
+    lessons:existing?.lessons||[],
+  };
+  if(id){const idx=courses.findIndex(c=>c.id===id);if(idx>=0)courses[idx]=course;}
+  else courses.push(course);
+  saveCourses(courses);
+  closeModal('courseModal');
+  renderAdmin();
+  renderCourses();
+  showToast('✅ Сохранено!');
+}
+function deleteCourse(id){
+  if(!confirm('Удалить?')) return;
+  saveCourses(getCourses().filter(c=>c.id!==id));
+  renderAdmin();
+  showToast('🗑 Удалено');
+}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');}));
+
+// ═══════════════════════════════════════════════════════
+// AI ASSISTANT
+// ═══════════════════════════════════════════════════════
+function toggleAI(){document.getElementById('ai-panel').classList.toggle('open');}
+function sendAI(){
+  const input=document.getElementById('aiInput');
+  const msg=input.value.trim();
+  if(!msg) return;
+  input.value='';
+  addAIMsg(msg,'user');
+  setTimeout(()=>{
+    const reply=getAIReply(msg);
+    addAIMsg(reply,'bot');
+  },600);
+}
+function addAIMsg(text,role){
+  const div=document.createElement('div');
+  div.className='ai-msg '+role;
+  div.textContent=text;
+  const msgs=document.getElementById('aiMsgs');
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+function getAIReply(q){
+  const ql=q.toLowerCase();
+  for(const kb of AI_KB){
+    if(kb.q.some(kw=>ql.includes(kw))) return kb.a;
+  }
+  if(ql.includes('курс')||ql.includes('учи')||ql.includes('обуч')) return 'У нас есть курсы по математике, английскому, программированию, экономике и поступлению в вуз. Какой предмет тебя интересует больше всего? 📚';
+  if(ql.includes('возможност')||ql.includes('конкурс')||ql.includes('хакатон')) return 'В каталоге есть олимпиады, хакатоны, летние школы, стипендии и волонтёрские программы. Зайди в раздел "Возможности" и используй фильтры! 🏆';
+  if(ql.includes('9 класс')||ql.includes('10 класс')||ql.includes('11 класс')) return 'Посмотри наш Roadmap — там подробно расписано, что делать в каждом классе для подготовки к университету! 🗺️';
+  if(ql.includes('казахстан')||ql.includes('kz')) return 'Для учеников из Казахстана особенно актуальны: стипендия Болашак, Летняя школа НУ, КазХак, Республиканская олимпиада. Все они в каталоге! 🇰🇿';
+  return 'Интересный вопрос! 🤔 Попробуй посмотреть в каталоге возможностей или выбери курс в разделе "Курсы". Если нужна помощь с конкретным направлением — уточни! 🎓';
+}
+
+// ═══════════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════════
+let toastTimer;
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// ═══════════════════════════════════════════════════════
+// START
+// ═══════════════════════════════════════════════════════
+autoLogin();
+</script>
+</body>
+</html>
